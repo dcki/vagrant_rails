@@ -1,0 +1,12 @@
+# vi: set ft=apache
+
+# TODO What does this do?
+<VirtualHost *:80>
+
+  # Execute common.conf in the current context.
+  Include /etc/apache2/common.conf
+
+  # TODO What does this do?
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
