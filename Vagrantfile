@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 # Vagrantfile API/syntax version.
-VAGRANTFILE_API_VERSION = "2"
+VAGRANTFILE_API_VERSION = '2'
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # All Vagrant configuration is done here. To see more configuration examples
@@ -11,16 +11,29 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # reference, see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "hashicorp/precise32"
+  # TODO I think I can permanently update the VirtualBox guest additions if I
+  # make a copy of this box and update the box. Or maybe there is a newer
+  # version of this box that I can download.
+  # TODO It might also be possible and a good idea to move some or most of
+  # bootstrap.sh to executed setup on the box so that the first vagrant up
+  # doesn't take so long.
+  config.vm.box = 'hashicorp/precise32'
 
-  # By default Vagrant mounts the same directory, but this line makes
-  # permissions slightly more restrictive by not allowing users outside the
-  # vagrant user or vagrant group to read these files.
-  config.vm.synced_folder ".", "/vagrant", mount_options: ["dmode=755", "fmode=640"]
+  # "mount_options: ['dmode=755', 'fmode=640']" makes permissions slightly more
+  # restrictive by not allowing other users or groups to read these files.
+  config.vm.synced_folder 'home', '/vagrant/home', mount_options: ['dmode=755', 'fmode=640']
+  config.vm.synced_folder 'apache', '/vagrant/apache', mount_options: ['dmode=755', 'fmode=640']
+  config.vm.synced_folder 'rails', '/var/www/rails', owner: 'www-data', group: 'www-data', mount_options: ['dmode=755', 'fmode=640']
 
-  config.vm.provision :shell, path: "bootstrap.sh"
+  # You might consider using CFEngine, Puppet, Chef, or similar instead of
+  # shell scripts.
+  config.vm.provision :shell, privileged: true,  path: 'bootstrap/bootstrap.sh'
+  config.vm.provision :shell, privileged: false, path: 'bootstrap/install-rvm.sh'
+  config.vm.provision :shell, privileged: false, path: 'bootstrap/install-rubinius.sh'
+  config.vm.provision :shell, privileged: false, path: 'bootstrap/install-rails.sh'
+  # Always execute this last.
+  config.vm.provision :shell, privileged: true,  path: 'bootstrap/start-apache.sh'
 
-  config.vm.network :forwarded_port, host: 4567, guest: 80
-
-  # You might also consider using CFEngine, Puppet, Chef, or similar.
+  # To learn how to run on ports 80 and 443, see http://www.dmuth.org/node/1404/web-development-port-80-and-443-vagrant
+  config.vm.network :forwarded_port, host: 4568, guest: 80
 end
