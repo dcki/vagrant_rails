@@ -25,7 +25,8 @@ set -v
 
 # Lots of output, stop echoing commands.
 set +v
-source /home/vagrant/.rvm/scripts/rvm
+HOME=/var/www/
+source $HOME/.rvm/scripts/rvm
 # Install Ruby 2.x.x, required to build Rubinius.
 # Using ruby-2.2.1 because it's the current stable version and has successfully
 # been used several times to build Rubinius.
@@ -39,7 +40,7 @@ rvm gemset create build-rubinius
 rvm use ruby-2.2.1@build-rubinius
 gem install bundler
 # Download Rubinius.
-cd /home/vagrant
+cd $HOME
 set -v
 \curl -sSL https://s3.amazonaws.com/releases.rubini.us/rubinius-2.5.2.tar.bz2 > rubinius-2.5.2.tar.bz2
 tar xjf rubinius-2.5.2.tar.bz2
@@ -50,11 +51,11 @@ set +v
 cd rubinius-2.5.2-source
 set -v
 bundle install
-./configure --prefix=/home/vagrant/rubinius-2.5.2-bin/ --cc=clang --cxx=clang++ --llvm-config=/usr/bin/llvm-config-3.4
+./configure --prefix=$HOME/rubinius-2.5.2-bin/ --cc=clang --cxx=clang++ --llvm-config=/usr/bin/llvm-config-3.4
 # Install Rubinius.
 rake install
 set +v
 # Add Rubinius to RVM.
-rvm mount /home/vagrant/rubinius-2.5.2-bin/ -n rbx-2.5.2
+rvm mount $HOME/rubinius-2.5.2-bin/ -n rbx-2.5.2
 rvm alias create default ext-rbx-2.5.2
 rvm use default

@@ -3,9 +3,9 @@
 # Echo all commands before executing.
 set -v
 
-# Put .gemrc in home folder. (Prevent gem documentation installation.)
-#ln -s /vagrant/home/.gemrc /home/vagrant/.gemrc
-
+# Put .gemrc in www-data home folder. (Prevent gem documentation installation.)
+# See Vagrantfile for why we don't just mount /var/www/
+ln -s /vagrant/home/www-data/.gemrc /var/www/.gemrc
 apt-get update
 
 # Set the server timezone to Pacific Time.
@@ -30,6 +30,7 @@ RUNLEVEL=1 apt-get install -y apache2
 # http://serverfault.com/q/681588/253409
 # Extra precaution.
 service apache2 stop
+rm /var/www/index.html
 rm /etc/apache2/sites-enabled/*
 # TODO Consider showing a maintenance page until deployment is complete.
 ln -s /vagrant/apache/common.conf /etc/apache2/common.conf
@@ -43,6 +44,8 @@ a2enmod rewrite
 # No solution is known yet. This problem has not been observed lately, so when
 # it is reproducible again a solution can be pursued.
 
+# TODO Some of these packages sometimes take a long time to download. Consider
+# hosting them from a shared folder or something.
 # curl is required to download RVM.
 # clang seems to be optional for building Rubinius, but it's cool.
 # llvm v3.0-3.5 is required to build Rubinius 2.5.2.
