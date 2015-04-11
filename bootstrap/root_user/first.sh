@@ -4,7 +4,7 @@
 set -v
 
 # Put .gemrc in home folder. (Prevent gem documentation installation.)
-ln -s /vagrant/home/.gemrc /home/vagrant/.gemrc
+#ln -s /vagrant/home/.gemrc /home/vagrant/.gemrc
 
 apt-get update
 

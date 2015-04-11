@@ -21,10 +21,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # "mount_options: ['dmode=755', 'fmode=640']" makes permissions slightly more
   # restrictive by not allowing other users or groups to read these files.
-  config.vm.synced_folder 'bootstrap/ruby_user', '/vagrant/bootstrap/ruby_user', owner: 'ruby', group: 'ruby', mount_options: ['dmode=755', 'fmode=640']
   config.vm.synced_folder 'apache', '/vagrant/apache', mount_options: ['dmode=755', 'fmode=640']
-  config.vm.synced_folder 'home', '/vagrant/home', mount_options: ['dmode=755', 'fmode=640']
-  config.vm.synced_folder 'rails', '/var/www/rails', owner: 'ruby', group: 'ruby', mount_options: ['dmode=755', 'fmode=640']
+  config.vm.synced_folder 'home/www-data', '/home/www-data', owner: 'www-data', group: 'www-data', mount_options: ['dmode=755', 'fmode=640']
+  config.vm.synced_folder 'bootstrap/www-data_user', '/vagrant/bootstrap/www-data_user', owner: 'www-data', group: 'www-data', mount_options: ['dmode=755', 'fmode=640']
+  config.vm.synced_folder 'www', '/var/www', owner: 'www-data', group: 'www-data', mount_options: ['dmode=755', 'fmode=640']
 
   # You might consider using CFEngine, Puppet, Chef, or similar instead of
   # shell scripts.
