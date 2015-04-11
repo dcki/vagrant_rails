@@ -49,7 +49,9 @@ a2enmod rewrite
 # curl is required to download RVM.
 # clang seems to be optional for building Rubinius, but it's cool.
 # llvm v3.0-3.5 is required to build Rubinius 2.5.2.
-apt-get install -y curl clang-3.4 llvm-3.4
+# The rest of the packages listed are from `rvm requirements ruby-2.2.1`.
+# (See bootstrap/www-data/install-rubinius.sh.)
+apt-get install -y curl clang-3.4 llvm-3.4 gawk g++ libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config
 
 # Stop echoing commands (see top).
 set +v

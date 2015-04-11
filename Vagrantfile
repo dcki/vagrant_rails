@@ -27,36 +27,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Downloaded from http://download.virtualbox.org/virtualbox/4.3.26/VBoxGuestAdditions_4.3.26.iso
   config.vbguest.iso_path = '../VBoxGuestAdditions_4.3.26.iso'
 
-  # "mount_options: ['dmode=755', 'fmode=640']" makes permissions slightly more
-  # restrictive by not allowing other users or groups to read these files.
-  # TODO I think dmode=755 is the default and can be omitted.
-  config.vm.synced_folder(
-    'apache', '/vagrant/apache',
-    owner: 'root', group: 'root',
-    mount_options: ['dmode=755', 'fmode=640']
-  )
+  config.vm.synced_folder 'apache', '/vagrant/apache', owner: 'root', group: 'root'
   # Note: /var/www is www-data's home folder.
   # Unfortunately we can't just mount the home folder because then weird issues
   # happen (like gpg being unable to create a lock when adding the key to verify
   # RVM), at least with VirtualBox shared folders. Might work on other providers.
-  config.vm.synced_folder(
-    'rails', '/var/www/rails',
-    owner: 'www-data', group: 'www-data',
-    mount_options: ['dmode=755', 'fmode=640']
-  )
-  config.vm.synced_folder(
-    'bootstrap', '/vagrant/bootstrap',
-    owner: 'root', group: 'root',
-    mount_options: ['dmode=755', 'fmode=740']
-  )
-  config.vm.synced_folder(
-    'bootstrap/execute_as_www-data', '/vagrant/bootstrap/execute_as_www-data',
-    owner: 'www-data', group: 'www-data',
-    mount_options: ['dmode=755', 'fmode=740']
-  )
+  config.vm.synced_folder 'rails', '/var/www/rails', owner: 'www-data', group: 'www-data'
+  config.vm.synced_folder 'bootstrap/root', '/vagrant/bootstrap/root', owner: 'root', group: 'root'
+  config.vm.synced_folder 'bootstrap/www-data', '/vagrant/bootstrap/www-data', owner: 'www-data', group: 'www-data'
 
-  # You might consider using CFEngine, Puppet, Chef, or similar instead of
-  # shell scripts.
+  # Consider using CFEngine, Puppet, Chef, or similar instead of shell scripts.
   config.vm.provision :shell, path: 'bootstrap/bootstrap.sh'
 
   # To learn how to run on ports 80 and 443, see http://www.dmuth.org/node/1404/web-development-port-80-and-443-vagrant

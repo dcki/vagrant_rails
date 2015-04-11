@@ -3,6 +3,9 @@
 # Echo all commands before executing.
 set -v
 
+# Since this whole alternative section is currently commented out, stop echoing
+# everything.
+set +v
 # Install Rubinius with rvm install.
 
 # Install supported llvm version.
@@ -20,13 +23,24 @@ set -v
 # (Like from https://s3.amazonaws.com/releases.rubini.us/rubinius-2.5.2.tar.bz2)
 # From havenwood in #rvm freenode irc:
 # You can override the setting in ~/.rvm/config/db by creating ~/.rvm/config/user with your preferred setting for any line.
+set -v
 
 # Install Rubinius with help from RVM.
 
 # Lots of output, stop echoing commands.
 set +v
-HOME=/var/www/
 source $HOME/.rvm/scripts/rvm
+# Configure RVM to report, but not install, missing required packages.
+# Installing them with RVM would require typing a password.
+# If any packages are missing, install them in first.sh.
+# See http://stackoverflow.com/a/17219765/724752 and
+# http://stackoverflow.com/a/23601941/724752
+rvm autolibs fail
+RVM_AUTOLIBS_MESSAGE="If RVM tells you to enable autolibs, ignore it. Instead, install any missing packages in bootstrap/root/first.sh."
+echo $RVM_AUTOLIBS_MESSAGE
+# Print required missing packages.
+rvm requirements ruby-2.2.1
+echo $RVM_AUTOLIBS_MESSAGE
 # Install Ruby 2.x.x, required to build Rubinius.
 # Using ruby-2.2.1 because it's the current stable version and has successfully
 # been used several times to build Rubinius.
@@ -42,6 +56,7 @@ gem install bundler
 # Download Rubinius.
 cd $HOME
 set -v
+# TODO Provide this installer in a synced folder rather than downloading it.
 \curl -sSL https://s3.amazonaws.com/releases.rubini.us/rubinius-2.5.2.tar.bz2 > rubinius-2.5.2.tar.bz2
 tar xjf rubinius-2.5.2.tar.bz2
 mv rubinius-2.5.2 rubinius-2.5.2-source
