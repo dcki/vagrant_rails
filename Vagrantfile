@@ -21,18 +21,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # "mount_options: ['dmode=755', 'fmode=640']" makes permissions slightly more
   # restrictive by not allowing other users or groups to read these files.
-  config.vm.synced_folder 'home', '/vagrant/home', mount_options: ['dmode=755', 'fmode=640']
+  config.vm.synced_folder 'bootstrap/ruby_user', '/vagrant/bootstrap/ruby_user', owner: 'ruby', group: 'ruby', mount_options: ['dmode=755', 'fmode=640']
   config.vm.synced_folder 'apache', '/vagrant/apache', mount_options: ['dmode=755', 'fmode=640']
-  config.vm.synced_folder 'rails', '/var/www/rails', owner: 'www-data', group: 'www-data', mount_options: ['dmode=755', 'fmode=640']
+  config.vm.synced_folder 'home', '/vagrant/home', mount_options: ['dmode=755', 'fmode=640']
+  config.vm.synced_folder 'rails', '/var/www/rails', owner: 'ruby', group: 'ruby', mount_options: ['dmode=755', 'fmode=640']
 
   # You might consider using CFEngine, Puppet, Chef, or similar instead of
   # shell scripts.
-  config.vm.provision :shell, privileged: true,  path: 'bootstrap/bootstrap.sh'
-  config.vm.provision :shell, privileged: false, path: 'bootstrap/install-rvm.sh'
-  config.vm.provision :shell, privileged: false, path: 'bootstrap/install-rubinius.sh'
-  config.vm.provision :shell, privileged: false, path: 'bootstrap/install-rails.sh'
-  # Always execute this last.
-  config.vm.provision :shell, privileged: true,  path: 'bootstrap/start-apache.sh'
+  config.vm.provision :shell, path: 'bootstrap/bootstrap.sh'
 
   # To learn how to run on ports 80 and 443, see http://www.dmuth.org/node/1404/web-development-port-80-and-443-vagrant
   config.vm.network :forwarded_port, host: 4568, guest: 80
