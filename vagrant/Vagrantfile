@@ -23,10 +23,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # TODO Try hashicorp/precise64.
   config.vm.box = 'hashicorp/precise32'
 
-  # Use pre-downloaded VBoxGuestAdditions iso to save time during vagrant up.
-  # Downloaded from http://download.virtualbox.org/virtualbox/4.3.26/VBoxGuestAdditions_4.3.26.iso
-  config.vbguest.iso_path = '../VBoxGuestAdditions_4.3.26.iso'
-
   config.vm.synced_folder 'apache', '/vagrant/apache', owner: 'root', group: 'root'
   # Note: /var/www is www-data's home folder.
   # Unfortunately we can't just mount the home folder because then weird issues
