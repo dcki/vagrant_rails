@@ -8,7 +8,7 @@ set -v
 # directories, including source code, may be publicly accessible until
 # installation is complete. Thus, ENABLE AT END OF ALL SETUP.
 a2ensite site
-a2ensite ssl
+#a2ensite ssl
 service apache2 restart
 
 # Stop echoing commands (see top).

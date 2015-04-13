@@ -35,8 +35,22 @@ rm /etc/apache2/sites-enabled/*
 # TODO Consider showing a maintenance page until deployment is complete.
 ln -s /vagrant/apache/common.conf /etc/apache2/common.conf
 ln -s /vagrant/apache/site /etc/apache2/sites-available/site
-ln -s /vagrant/apache/ssl /etc/apache2/sites-available/ssl
-a2enmod rewrite
+# TODO Don't enable ssl until it's ready for production.
+#ln -s /vagrant/apache/ssl /etc/apache2/sites-available/ssl
+#a2enmod rewrite
+# Needed to connect Puma to Apache. See apache/common.conf.
+a2enmod proxy
+a2enmod proxy_http
+# Set the FQDN (fully qualified domain name).
+# (Stop "Could not reliably determine the server's fully qualified domain name"
+# message.) See http://askubuntu.com/a/256018/207584
+# TODO Replace localhost with the correct name when you know it.
+echo "ServerName localhost" > /etc/apache2/conf.d/fqdn.conf
+# To execute this manually:
+#echo "ServerName localhost" | sudo tee /etc/apache2/conf.d/fqdn.conf
+# On Ubuntu 14.04 (or maybe more precisely Apache 2.4)
+#echo "ServerName localhost" > /etc/apache2/conf.d/fqdn.conf
+#sudo a2enconf fqdn
 
 # Fix sudo. Otherwise, sometimes PATH is wrong when using sudo and I have to
 # `sudo su -l root -c '...'` instead. This often happens during
@@ -49,9 +63,16 @@ a2enmod rewrite
 # curl is required to download RVM.
 # clang seems to be optional for building Rubinius, but it's cool.
 # llvm v3.0-3.5 is required to build Rubinius 2.5.2.
+# nodejs is for use by Rails as a JavaScript runtime.
+# See https://github.com/rails/execjs
+# Some versions of Nokogiri need libxml2-dev.
+# See http://www.nokogiri.org/tutorials/installing_nokogiri.html
+# Some (all?) versions of pg need libpq-dev.
+# See http://stackoverflow.com/q/6040583/724752
 # The rest of the packages listed are from `rvm requirements ruby-2.2.1`.
-# (See bootstrap/www-data/install-rubinius.sh.)
-apt-get install -y curl clang-3.4 llvm-3.4 gawk g++ libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config
+# See bootstrap/www-data/install-rubinius.sh
+apt-get install -y curl clang-3.4 llvm-3.4 nodejs libxml2-dev libpq-dev gawk g++ libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config
+
 
 # Stop echoing commands (see top).
 set +v

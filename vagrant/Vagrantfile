@@ -31,6 +31,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder 'rails', '/var/www/rails', owner: 'www-data', group: 'www-data'
   config.vm.synced_folder 'bootstrap/root', '/vagrant/bootstrap/root', owner: 'root', group: 'root'
   config.vm.synced_folder 'bootstrap/www-data', '/vagrant/bootstrap/www-data', owner: 'www-data', group: 'www-data'
+  # Note: vagrant_rails/vagrant is mounted at /vagrant by default.
 
   # Consider using CFEngine, Puppet, Chef, or similar instead of shell scripts.
   config.vm.provision :shell, path: 'bootstrap/bootstrap.sh'

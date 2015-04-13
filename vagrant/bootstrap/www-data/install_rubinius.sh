@@ -6,23 +6,22 @@ set -v
 # Since this whole alternative section is currently commented out, stop echoing
 # everything.
 set +v
+
+# TODO Try installing Rubinius with RVM instead.
+
 # Install Rubinius with rvm install.
 
 # Install supported llvm version.
-# http://stackoverflow.com/questions/14962192/how-to-choose-the-llvm-version-clang-is-using
-# http://kwangyulseo.com/2014/02/05/using-multiple-llvm-versions-on-ubuntu/
-#apt-get install -y llvm-3.4
-# The -- on the end is required to prevent rvm from using the wrong llvm
 # version. The Rubinius 2.5.2 configure script requires that llvm version
 # 3.0-3.5 be used, and rvm is attempting to use llvm 2.9.
-#rvm install rbx-2.5.2 --
-#rvm install rbx --1.9
-#rvm install rbx
+#rvm install rbx-2.5.2
 # Try `rvm install rbx --debug` to get verbose output and possibly see what configure options it is trying to use.
 # Is there any way to direct RVM where to download the source during rvm install rbx?
 # (Like from https://s3.amazonaws.com/releases.rubini.us/rubinius-2.5.2.tar.bz2)
 # From havenwood in #rvm freenode irc:
 # You can override the setting in ~/.rvm/config/db by creating ~/.rvm/config/user with your preferred setting for any line.
+
+#rvm use rbx-2.5.2@rails --create
 set -v
 
 # Install Rubinius with help from RVM.
@@ -73,4 +72,7 @@ set +v
 # Add Rubinius to RVM.
 rvm mount $HOME/rubinius-2.5.2-bin/ -n rbx-2.5.2
 rvm alias create default ext-rbx-2.5.2
-rvm use default
+rvm use ext-rbx-2.5.2@rails --create
+# These files don't seem to have any effect for some reason. But they do work in /var/www/rails.
+#echo ext-rbx-2.5.2 > /var/www/.ruby-version
+#echo rails > /var/www/.ruby-gemset
