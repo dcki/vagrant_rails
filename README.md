@@ -69,7 +69,7 @@ Next you need to ssh into the server, create a gemset, and install your gems.
         bash --login
         cd /var/www/rails
         rvm use --create @your_new_gemset
-        # New to Rails? See [http://guides.rubyonrails.org/getting_started.html](http://guides.rubyonrails.org/getting_started.html)
+        # New to Rails? See http://guides.rubyonrails.org/getting_started.html
         gem install rails
         rails new blog
         echo "gem 'puma'" > Gemfile
