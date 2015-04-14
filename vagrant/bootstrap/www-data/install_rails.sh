@@ -16,6 +16,7 @@ echo "export LC_ALL=en_US.UTF-8" | tee -a ~/.bashrc ~/.bash_profile
 
 # Install gems (like Puma) from Gemfile.
 cd /var/www/rails
+rvm use ext-rbx-2.5.2@rails
 bundle install
 
 # Add secret_key_base for Rails in production mode.

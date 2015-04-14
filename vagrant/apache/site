@@ -19,7 +19,9 @@
   ProxyPass /public !
   # Proxy everything else sent to this vhost ("*:80" above sends everything
   # from port 80 here) to the Puma server running on localhost. See README.md.
-  ProxyPass / http://127.0.0.1:9292/
+  # retry=2 makes Apache try Puma again after 2 seconds if an attempt fails,
+  # instead of the default 60 seconds.
+  ProxyPass / http://127.0.0.1:9292/ retry=2
   ProxyPassReverse / http://127.0.0.1:9292/
   # Defaults to Off but safest to make it explicit.
   ProxyRequests Off

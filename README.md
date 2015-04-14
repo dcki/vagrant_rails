@@ -78,11 +78,6 @@ Next you need to ssh into the server, create a gemset, and install your gems.
         
 (If there is a complaint that the port is already taken, then follow the directions under "How to kill the Puma daemon process" below.)
 
-In another shell, restart Apache. (Must be `vagrant` user to `sudo`.)
-
-        vagrant ssh
-        sudo service apache2 restart
-
 After that you can hack away on the Rails app files from your local machine. If you change the `rails/config` files, then restart Puma and Apache, in that order. (Eventually I will make that simpler.)
 
 ## Run Puma
@@ -91,20 +86,18 @@ After that you can hack away on the Rails app files from your local machine. If 
 
 `bundle exec puma`
 
-(And then restart Apache in another shell instance. Remember, must be `vagrant` user to `sudo`.)
-
 ### In production mode
 
 `bundle exec puma --production`
-
-(And then restart Apache in another shell instance.)
 
 ### As a daemon
 
 `bundle exec puma -d`
 
-(And then restart Apache in another shell instance.)
-
 **How to kill the Puma daemon process**
 
 Find puma's PID with `ps axu | grep -v grep | grep puma`. Stop the daemon with `kill PID`. (If you don't know what `kill` is then read `man kill` first.) (Coming soon: this is easier with pumactl and a puma config file.)
+
+## Restart Apache
+
+Make sure you are the `vagrant` user, not the `www-data` user, so that you can use `sudo`. You can find out which user you are using `whoami`. Then do `sudo service apache2 restart`. You shouldn't need to do this unless Apache config, enabled sites, or enabled modules are changed.
