@@ -25,11 +25,11 @@ The instructions below probably won't work in Windows' normal command prompt (th
         cd vagrant_rails/vagrant
         vagrant up
 
-- `vagrant up` will take a while the first time. Come back in 10 or 20 minutes.
+2. `vagrant up` will take a while the first time. Come back in 10 or 20 minutes.
 
-- When `vagrant up` is complete, visit [http://localhost:4568](http://localhost:4568).
+3. When `vagrant up` is complete, visit [http://localhost:4568](http://localhost:4568).
 
-- Try `vagrant ssh`:
+4. Try `vagrant ssh`:
 
         # cd back to the vagrant directory if you're not there already.
         cd vagrant_rails/vagrant
