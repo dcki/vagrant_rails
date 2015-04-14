@@ -6,28 +6,30 @@ Eventually the aim is for it to be fully production ready, but first there are s
 
 I don't have much experience with Puma or Rubinius yet. Currently Puma is proxied through Apache, but it's possible Puma might run fine all on its own in production, I don't know yet.
 
-##Setup
+## Requirements
 
-Requires Linux, Unix (Mac OS X is a Unix OS), or similar.
+### All Operating Systems
 
-If you are using Windows then [the Git shell](https://msysgit.github.io/) (or was it [this](https://windows.github.com/)?) should work, or [Cygwin](https://www.cygwin.com/). (You might even be able to just use the regular Windows command prompt.)
+Install [Vagrant](http://www.vagrantup.com/downloads.html), [VirtualBox](https://www.virtualbox.org/wiki/Downloads), and [Git](http://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
-1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
+### Extra requirements for Windows
 
-2. Install [Vagrant](http://www.vagrantup.com/downloads.html).
+The instructions below probably won't work in Windows' normal command prompt (they might! I'm not sure), but they should work in [this Git shell](https://msysgit.github.io/), [this other Git shell](https://windows.github.com/), or [Cygwin](https://www.cygwin.com/).
 
-3. Open a shell:
+## Setup
+
+1. Open a shell (i.e. Terminal, Cygwin, or whatever):
 
         vagrant plugin install vagrant-vbguest
         git clone git@github.com:Vinietskyzilla/vagrant_rails.git
         cd vagrant_rails/vagrant
         vagrant up
 
-4. `vagrant up` will take a while the first time. Come back in 10 or 20 minutes.
+- `vagrant up` will take a while the first time. Come back in 10 or 20 minutes.
 
-5. When `vagrant up` is complete, visit [http://localhost:4568](http://localhost:4568).
+- When `vagrant up` is complete, visit [http://localhost:4568](http://localhost:4568).
 
-6. Try `vagrant ssh`:
+- Try `vagrant ssh`:
 
         # cd back to the vagrant directory if you're not there already.
         cd vagrant_rails/vagrant
@@ -73,6 +75,8 @@ Next you need to ssh into the server, create a gemset, and install your gems.
         echo "gem 'puma'" > Gemfile
         bundle install
         bundle exec puma
+        
+(If there is a complaint that the port is already taken, then follow the directions under "How to kill the Puma daemon process" below.)
 
 In another shell, restart Apache. (Must be `vagrant` user to `sudo`.)
 
@@ -81,16 +85,26 @@ In another shell, restart Apache. (Must be `vagrant` user to `sudo`.)
 
 After that you can hack away on the Rails app files from your local machine. If you change the `rails/config` files, then restart Puma and Apache, in that order. (Eventually I will make that simpler.)
 
-## Run Puma in production mode
+## Run Puma
+
+### In development mode 
+
+`bundle exec puma`
+
+(And then restart Apache in another shell instance. Remember, must be `vagrant` user to `sudo`.)
+
+### In production mode
 
 `bundle exec puma --production`
 
-(And then restart Apache. Remember, must be `vagrant` user to `sudo`.)
+(And then restart Apache in another shell instance.)
 
-## Run Puma as daemon
+### As a daemon
 
 `bundle exec puma -d`
 
-(And then restart Apache.)
+(And then restart Apache in another shell instance.)
 
-Find puma's pid with `ps axu | grep -v grep | grep puma`. Stop the daemon with `kill <PID>`. (Coming soon: this is easier with pumactl and a puma config file.)
+**How to kill the Puma daemon process**
+
+Find puma's PID with `ps axu | grep -v grep | grep puma`. Stop the daemon with `kill PID`. (If you don't know what `kill` is then read `man kill` first.) (Coming soon: this is easier with pumactl and a puma config file.)
