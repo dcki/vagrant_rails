@@ -8,6 +8,10 @@ I don't have much experience with Puma or Rubinius yet. Currently Puma is proxie
 
 ##Setup
 
+Requires Linux, Unix (Mac OS X is a Unix OS), or similar.
+
+If you are using Windows then [the Git shell](https://msysgit.github.io/) (or was it [this](https://windows.github.com/)?) should work, or [Cygwin](https://www.cygwin.com/). (You might even be able to just use the regular Windows command prompt.)
+
 1. Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
 
 2. Install [Vagrant](http://www.vagrantup.com/downloads.html).
