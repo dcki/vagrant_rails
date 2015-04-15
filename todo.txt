@@ -1,0 +1,15 @@
+TODO
+Experiment with 0.0.0.0, localhost, and 127.0.0.1 and read about what 0.0.0.0 means.
+
+TODO
+Make vagrant reload start Puma and Apache.
+
+TODO
+In case users don't want to use Apache while developing, make it easy to get Puma connected directly to port 80.
+http://serverfault.com/a/112798/253409
+
+TODO
+Install Rubinius with RVM.
+
+TODO
+Install dependencies from a cache synced folder.

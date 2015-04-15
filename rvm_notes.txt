@@ -1,0 +1,53 @@
+You have joined the channel
+Topic: Leave a message + email/twitter and stick around. Please help out if you can, nicely. tip jar => https://www.bountysource.com/cart?team_id=rvm site/binaries cache https://rvm_io.global.ssl.fastly.net
+mpapis set the topic at: Dec 1, 2014 1:04 PM
+holmes.freenode.net
+[freenode-info] channel flooding and no channel staff around to help? Please check with freenode support: http://freenode.net/faq.shtml#gettinghelp
+Mode: +nrt
+Created at: Aug 24, 2009 5:58 AM
+cki
+The (non-Git repository) Rubinius source downloads listed at http://rubini.us/downloads/ download faster than https://github.com/rubinius/rubinius.git. Is there any way I can direct rvm to use that source directory to install Rubinius after I have downloaded and uncompressed it?
+smf_bot
+Title: Rubinius : Use Ruby (at rubini.us)
+smf_bot
+cki: Y U POST BROKEN LINKS?
+cki
+(Neither of those links seem to be broken.)
+cki
+Or is there any way to direct RVM where to download the source during rvm install rbx?
+havenwood
+cki: You can override the setting in ~/.rvm/config/db by creating ~/.rvm/config/user with your preferred setting for any line.
+cki
+havenwood: I'll try, thank you!
+havenwood
+cki: The https://github.com/rubinius/rubinius.git is for the git repo though. Like building from master.
+smf_bot
+Title: rubinius/rubinius · GitHub (at github.com)
+havenwood
+cki: It looks like the binaries are already pointing at rubini.us.
+cki
+It looks to me (from RVM's output) like RVM downloads https://github.com/rubinius/rubinius.git during rvm install rbx
+12:09 smf_bot
+Title: rubinius/rubinius · GitHub (at github.com)
+cki
+I think I'm using a version RVM doesn't have yet.
+cki
+Or...
+cki
+I don't know yet..
+havenwood
+cki: With `rvm install rbx` I'm getting a quick binary download from https://rvm_io.global.ssl.fastly.net/binaries/...
+havenwood
+cki: What version of RVM are you on?
+havenwood
+Oh, actually, scratch that, the binary was the ruby prerequisite.
+cki
+rvm 1.26.11. I tried rvm install rbx-2.5.2. It said "No binary rubies available for: ubuntu/12.04/i386/rbx-2.5.2." But I guess it actually didn't download the Git repo because the Rubinius download size was only 11.1M. It took 24 seconds.
+cki
+So maybe I should just install the default rbx, not rbx-2.5.2. I'm not really attached to a particular version at this point.
+havenwood
+cki: You could try: rvm mount -r https://s3.amazonaws.com/releases.rubini.us/rubinius-2.5.2.tar.bz2 -n rbx-2.5.2
+cki
+Oh cool, I think that's what I was looking for! `rvm --help mount` says "RVM supports adding rubies compiled by user." so the specified directory might need to be the already compiled Ruby. That link is source. But I know how to build it now so that should work...
+cki
+I'm still testing, but thank you havenwood!
