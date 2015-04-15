@@ -23,6 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # TODO Try hashicorp/precise64.
   config.vm.box = 'hashicorp/precise32'
 
+  config.vm.synced_folder 'home/vagrant/scripts', '/home/vagrant/vagrant_rails_scripts'
   config.vm.synced_folder 'apache', '/vagrant/apache', owner: 'root', group: 'root'
   # Note: /var/www is www-data's home folder.
   # Unfortunately we can't just mount the home folder because then weird issues
@@ -30,7 +31,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # RVM), at least with VirtualBox shared folders. Might work on other providers.
   config.vm.synced_folder 'rails', '/var/www/rails', owner: 'www-data', group: 'www-data'
   config.vm.synced_folder 'bootstrap/root', '/vagrant/bootstrap/root', owner: 'root', group: 'root'
-  config.vm.synced_folder 'bootstrap/www-data', '/vagrant/bootstrap/www-data', owner: 'www-data', group: 'www-data'
+  config.vm.synced_folder 'bootstrap/www-data', '/vagrant/bootstrap/www-data', owner: 'www-data', group: 'www-data', mount_options: ['dmode=755', 'fmode=754']
   # Note: vagrant_rails/vagrant is mounted at /vagrant by default.
 
   # Consider using CFEngine, Puppet, Chef, or similar instead of shell scripts.

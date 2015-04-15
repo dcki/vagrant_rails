@@ -28,7 +28,7 @@ set -v
 
 # Lots of output, stop echoing commands.
 set +v
-source $HOME/.rvm/scripts/rvm
+source ~/.rvm/scripts/rvm
 # Configure RVM to report, but not install, missing required packages.
 # Installing them with RVM would require typing a password.
 # If any packages are missing, install them in first.sh.
@@ -53,7 +53,7 @@ rvm gemset create build-rubinius
 rvm use ruby-2.2.1@build-rubinius
 gem install bundler
 # Download Rubinius.
-cd $HOME
+cd ~
 set -v
 # TODO Provide this installer in a synced folder rather than downloading it.
 \curl -sSL https://s3.amazonaws.com/releases.rubini.us/rubinius-2.5.2.tar.bz2 > rubinius-2.5.2.tar.bz2
@@ -65,14 +65,13 @@ set +v
 cd rubinius-2.5.2-source
 set -v
 bundle install
-./configure --prefix=$HOME/rubinius-2.5.2-bin/ --cc=clang --cxx=clang++ --llvm-config=/usr/bin/llvm-config-3.4
+./configure --prefix=~/rubinius-2.5.2-bin/ --cc=clang --cxx=clang++ --llvm-config=/usr/bin/llvm-config-3.4
 # Install Rubinius.
 rake install
 set +v
 # Add Rubinius to RVM.
-rvm mount $HOME/rubinius-2.5.2-bin/ -n rbx-2.5.2
+rvm mount ~/rubinius-2.5.2-bin/ -n rbx-2.5.2
 rvm alias create default ext-rbx-2.5.2
-rvm use ext-rbx-2.5.2@rails --create
 # These files don't seem to have any effect for some reason. But they do work in /var/www/rails.
 #echo ext-rbx-2.5.2 > /var/www/.ruby-version
 #echo rails > /var/www/.ruby-gemset

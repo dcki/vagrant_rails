@@ -14,5 +14,8 @@ gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB8
 # curl -sSL makes curl not show progress, report errors, and follow redirects.
 \curl -sSL https://get.rvm.io | bash -s stable
 
+# Make RVM automatically install rubies found in .ruby-version.
+echo rvm_install_on_use_flag=1 >> ~/.rvmrc
+
 # Stop echoing commands (see top).
 set +v

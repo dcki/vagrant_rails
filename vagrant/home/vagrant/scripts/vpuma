@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# TODO Improve input validation.
+if [ -z "$1" ]; then
+  echo 'usage: vpuma <command> [<environment>]';
+  # pumactl prints available commands when called without arguments.
+  # pumactl --help provides more info, but since we always use -F below I think
+  # it would be confusing to use --help here.
+  su -l www-data -s /bin/bash -c "cd /var/www/rails; bundle exec pumactl"
+else
+  command=$1;
+
+  if [ -z "$2" ]; then
+    RAILS_ENV=development;
+  else
+    RAILS_ENV=$2;
+  fi
+
+  echo "su -l www-data -s /bin/bash -c \"cd /var/www/rails; RAILS_ENV=$RAILS_ENV bundle exec pumactl -F /var/www/puma_config.rb $command\""
+  su -l www-data -s /bin/bash -c "cd /var/www/rails; RAILS_ENV=$RAILS_ENV bundle exec pumactl -F /var/www/puma_config.rb $command"
+fi

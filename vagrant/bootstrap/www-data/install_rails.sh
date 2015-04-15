@@ -14,39 +14,30 @@ echo "export LANGUAGE=en_US.UTF-8" | tee -a ~/.bashrc ~/.bash_profile
 echo "export LANG=en_US.UTF-8" | tee -a ~/.bashrc ~/.bash_profile
 echo "export LC_ALL=en_US.UTF-8" | tee -a ~/.bashrc ~/.bash_profile
 
-# Install gems (like Puma) from Gemfile.
+
+# Because of rvm_install_on_use_flag=1 in .rvmrc, the ruby in .ruby-version
+# should be installed automatically.
 cd /var/www/rails
-rvm use ext-rbx-2.5.2@rails
+# Select correct gemset.
+if ( [ ! -e .ruby-version ] || [ ! -e .ruby-gemset ] ) && [ ! -e .rvmrc ]; then
+  # Missing .ruby-version or .ruby-gemset, and also no .rvmrc, so use this ruby
+  # and gemset by default.
+  rvm use ext-rbx-2.5.2@rails --create
+fi
+
+# Make sure Gemfile includes Puma.
+if ! grep -qP -e "^\s*gem\s*[\"']puma[\"']" Gemfile; then
+  # Need da Puma.
+  printf "%s\n" \
+    "" \
+    "# This was added by vagrant_rails/vagrant/bootstrap/www-data/install_rails.sh" \
+    "# because no \"gem 'puma'\" statement was detected." \
+    "gem 'puma'" \
+    >> Gemfile
+fi
+
+# Install gems from Gemfile.
 bundle install
-
-# Add secret_key_base for Rails in production mode.
-# TODO
-# This all depends on there being a rails app in /var/www/rails and gems
-# bundle-installed in ext-rbx-2.5.2@rails beforehand.
-cd /var/www/rails
-# Get the correct ruby and gemset for rake.
-# TODO Maybe we should rely on .ruby-version and .ruby-gemset here since they
-# seem to work in /var/www/rails (unlike /var/www).
-rvm use ext-rbx-2.5.2@rails
-# Create secret_key_base.
-SKB_FILE=/var/www/.secret_key_base
-echo "export SECRET_KEY_BASE=$(RAILS_ENV=production rake secret)" > $SKB_FILE
-. $SKB_FILE
-echo ". $SKB_FILE" | tee -a ~/.bashrc ~/.bash_profile
-# Keep this secret.
-chmod o-rwx $SKB_FILE
-
-# TODO When there is a moderate amount of application code to test with, try
-# Phusion Passenger, do performance testing, and compare performance to Puma.
-
-# Start Puma. (Still need to start Apache in start_apache.sh.)
-# Rely on /var/www/rails/Gemfile to include Puma. If the Gemfile does not
-# include Puma and starting Puma thus fails, then I think it will be obvious
-# from the error message what needs to be done.
-bundle exec puma -e production
-# See apache/common.conf for Apache proxy port.
-# Start in development mode:
-# bundle exec puma -b tcp://0.0.0.0:9292
 
 # Stop echoing commands (see top).
 set +v

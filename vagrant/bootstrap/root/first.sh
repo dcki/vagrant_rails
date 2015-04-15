@@ -3,14 +3,24 @@
 # Echo all commands before executing.
 set -v
 
-# Put .gemrc in www-data home folder. (Prevent gem documentation installation.)
+# Add scripts (like vpuma) to PATH.
+echo 'export PATH=$PATH:/home/vagrant/vagrant_rails_scripts' >> /home/vagrant/.bashrc
+
+# When Vagrant mounts /var/www/rails the /var/www directory is created and
+# owned by root, but it should be owned by www-data.
+chown www-data:www-data /var/www
+
+# Put www-data home folder files in www-data home folder.
 # See Vagrantfile for why we don't just mount /var/www/
+ln -s /vagrant/home/www-data/puma_config.rb /var/www/puma_config.rb
+# Prevent gem documentation installation.
 ln -s /vagrant/home/www-data/.gemrc /var/www/.gemrc
-apt-get update
 
 # Set the server timezone to Pacific Time.
 echo "America/Los_Angeles" > /etc/timezone
 dpkg-reconfigure --frontend noninteractive tzdata
+
+apt-get update
 
 # TODO Try nginx
 # TODO If Apache can be installed after Passenger or Puma, move all Apache
@@ -33,24 +43,6 @@ service apache2 stop
 rm /var/www/index.html
 rm /etc/apache2/sites-enabled/*
 # TODO Consider showing a maintenance page until deployment is complete.
-ln -s /vagrant/apache/common.conf /etc/apache2/common.conf
-ln -s /vagrant/apache/site /etc/apache2/sites-available/site
-# TODO Don't enable ssl until it's ready for production.
-#ln -s /vagrant/apache/ssl /etc/apache2/sites-available/ssl
-#a2enmod rewrite
-# Needed to connect Puma to Apache. See apache/common.conf.
-a2enmod proxy
-a2enmod proxy_http
-# Set the FQDN (fully qualified domain name).
-# (Stop "Could not reliably determine the server's fully qualified domain name"
-# message.) See http://askubuntu.com/a/256018/207584
-# TODO Replace localhost with the correct name when you know it.
-echo "ServerName localhost" > /etc/apache2/conf.d/fqdn.conf
-# To execute this manually:
-#echo "ServerName localhost" | sudo tee /etc/apache2/conf.d/fqdn.conf
-# On Ubuntu 14.04 (or maybe more precisely Apache 2.4)
-#echo "ServerName localhost" > /etc/apache2/conf.d/fqdn.conf
-#sudo a2enconf fqdn
 
 # Fix sudo. Otherwise, sometimes PATH is wrong when using sudo and I have to
 # `sudo su -l root -c '...'` instead. This often happens during
@@ -67,12 +59,12 @@ echo "ServerName localhost" > /etc/apache2/conf.d/fqdn.conf
 # See https://github.com/rails/execjs
 # Some versions of Nokogiri need libxml2-dev.
 # See http://www.nokogiri.org/tutorials/installing_nokogiri.html
-# Some (all?) versions of pg need libpq-dev.
+# Some (all?) versions of the pg gem need libpq-dev.
 # See http://stackoverflow.com/q/6040583/724752
+# Many Rails apps use Postgresql, so install it too.
 # The rest of the packages listed are from `rvm requirements ruby-2.2.1`.
 # See bootstrap/www-data/install-rubinius.sh
-apt-get install -y curl clang-3.4 llvm-3.4 nodejs libxml2-dev libpq-dev gawk g++ libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config
-
+apt-get install -y curl clang-3.4 llvm-3.4 nodejs libxml2-dev libpq-dev postgresql gawk g++ libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config
 
 # Stop echoing commands (see top).
 set +v
