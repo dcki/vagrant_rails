@@ -14,6 +14,16 @@ echo "export LANGUAGE=en_US.UTF-8" | tee -a ~/.bashrc ~/.bash_profile
 echo "export LANG=en_US.UTF-8" | tee -a ~/.bashrc ~/.bash_profile
 echo "export LC_ALL=en_US.UTF-8" | tee -a ~/.bashrc ~/.bash_profile
 
+set +v
+
+function_exists() {
+  declare -f -F $1 > /dev/null
+  return $?
+}
+if ! function_exists rvm; then
+  echo 'RVM is not a function. Sourcing ~/.rvm/scripts/rvm';
+  source ~/.rvm/scripts/rvm
+fi
 
 # Because of rvm_install_on_use_flag=1 in .rvmrc, the ruby in .ruby-version
 # should be installed automatically.
@@ -24,6 +34,7 @@ if ( [ ! -e .ruby-version ] || [ ! -e .ruby-gemset ] ) && [ ! -e .rvmrc ]; then
   # and gemset by default.
   rvm use ext-rbx-2.5.2@rails --create
 fi
+set -v
 
 # Make sure Gemfile includes Puma.
 if ! grep -qP -e "^\s*gem\s*[\"']puma[\"']" Gemfile; then

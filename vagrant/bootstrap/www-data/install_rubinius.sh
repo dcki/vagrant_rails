@@ -28,7 +28,14 @@ set -v
 
 # Lots of output, stop echoing commands.
 set +v
-source ~/.rvm/scripts/rvm
+function_exists() {
+  declare -f -F $1 > /dev/null
+  return $?
+}
+if ! function_exists rvm; then
+  echo 'RVM is not a function. Sourcing ~/.rvm/scripts/rvm';
+  source ~/.rvm/scripts/rvm
+fi
 # Configure RVM to report, but not install, missing required packages.
 # Installing them with RVM would require typing a password.
 # If any packages are missing, install them in first.sh.
