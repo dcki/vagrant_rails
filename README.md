@@ -21,7 +21,7 @@ The instructions below probably won't work in Windows' normal command prompt (th
 1. Open a shell (i.e. Terminal, Cygwin, or whatever):
 
         vagrant plugin install vagrant-vbguest
-        git clone git@github.com:Vinietskyzilla/vagrant_rails.git
+        git clone git@github.com:dcki/vagrant_rails.git
         cd vagrant_rails/vagrant
         vagrant up
 
